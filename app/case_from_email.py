@@ -68,6 +68,7 @@ def search_observables(buffer, wsl):
 	iocs['domains'] = ioc_finder.parse_domain_names(buffer)
 	# Option to parse URLs without a scheme (e.g. without https://)
 	iocs['urls'] = ioc_finder.parse_urls(buffer, parse_urls_without_scheme=False)
+	iocs['phone-numbers'] = ioc_finder.parse_phone_numbers(buffer)
 	for mail in iocs['email_addresses']:
 		if is_whitelisted('mail', mail):
 			log.info("Skipped whitelisted observable mail: {0}".format(mail))
@@ -100,6 +101,10 @@ def search_observables(buffer, wsl):
 			log.info("Found observable url: {0}".format(url))
 			wsl.emit_info("Found observable url: {0}".format(url))
 			observables.append({'type': 'url', 'value': url})
+	for phone_number in iocs['phone-numbers']:
+			log.info("Found observable phone-number: {0}".format(phone_number))
+			wsl.emit_info("Found observable phone-number: {0}".format(phone_number))
+			observables.append({'type': 'phone-number', 'value': phone_number})
 	return observables
 
 
