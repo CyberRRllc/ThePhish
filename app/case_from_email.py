@@ -59,6 +59,11 @@ def is_whitelisted(obs_type, obs_value):
 	return found
 
 
+def parse_phone_numbers(buffer):
+	phone_regex = re.compile(r'''(?:[1-]*?\(?\d{3}\)?[-_ ]+\d{3}[-_ ]+\d{4})|(?:\+\d{2} \d{1} \d{3}-\d{4})|(?:\d{4} [0-9 ]{7})|^(?:\d{10})$|(?:\(?\d{3}\)?(?:[\.\-])\d{3}[\.\-]\d{4})|^(?:\d{3}[\.\-]\d{4}[\.\-]\d{3})''')
+	return phone_regex.findall(buffer)
+
+
 # Use the ioc-finder module to extract observables from a string buffer and add to the list only if they are not whitelisted
 def search_observables(buffer, wsl):
 	observables = []
@@ -68,7 +73,7 @@ def search_observables(buffer, wsl):
 	iocs['domains'] = ioc_finder.parse_domain_names(buffer)
 	# Option to parse URLs without a scheme (e.g. without https://)
 	iocs['urls'] = ioc_finder.parse_urls(buffer, parse_urls_without_scheme=False)
-	iocs['phone-numbers'] = ioc_finder.parse_phone_numbers(buffer)
+	iocs['phone-numbers'] = parse_phone_numbers(buffer)
 	for mail in iocs['email_addresses']:
 		if is_whitelisted('mail', mail):
 			log.info("Skipped whitelisted observable mail: {0}".format(mail))
