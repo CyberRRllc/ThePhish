@@ -209,7 +209,7 @@ def analyze_observables(case, task_id, wsl):
 								wsl.emit_info("Analyzer " + analyzer.name + " for " + observable_info['type'] + " " + observable_info['name'] + " terminated. Added the url " + unshortened_url + " as new observable to the case.")
 
 		# Start all the applicable analyzers if the observable is not the EML file
-		if observable_info['type'] != 'file_message/rfc822':
+		if observable_info['type'] != 'file_message/rfc822' and observable_info['type'] in applicable_analyzers:
 			for analyzer in applicable_analyzers[observable_info['type']]:
 				# The DomainMailSPFDMARC_Analyzer should only be started on domains that should be able to send emails
 				# It is started only on observables found in a subset of the header fields
